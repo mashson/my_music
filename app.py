@@ -1,7 +1,6 @@
-from flask import Flask, render_template, send_file, jsonify
+from flask import Flask, send_file, jsonify
 from flask_cors import CORS
 import os
-import json
 
 app = Flask(__name__)
 CORS(app)
@@ -27,36 +26,55 @@ def get_music_list():
     try:
         music_list = []
         
-        # uploads 폴더에서 음악 파일들 찾기
-        for filename in os.listdir(UPLOAD_FOLDER):
+        # album1 폴더에서 음악 파일들 찾기
+        album_folder = os.path.join(UPLOAD_FOLDER, 'album1')
+        
+        if not os.path.exists(album_folder):
+            return jsonify({
+                'success': False,
+                'error': 'album1 폴더를 찾을 수 없습니다.'
+            }), 404
+        
+        for filename in os.listdir(album_folder):
             if filename.endswith(('.flac', '.wav', '.mp3')):
                 # 파일명에서 번호와 제목 추출
                 name_without_ext = os.path.splitext(filename)[0]
                 
-                # 번호 제거 (예: "01.햇살이 되어" -> "햇살이 되어")
-                if name_without_ext.startswith(('01.', '02.', '03.', '04.', '05.', '06.')):
-                    title = name_without_ext[3:].strip()  # 번호와 점 제거
+                # 번호 추출 (예: "01.햇살이 되어" -> "01", "햇살이 되어")
+                if name_without_ext.startswith(('01.', '02.', '03.', '04.', '05.', '06.', '07.', '08.', '09.', '10.')):
+                    # 번호와 제목 분리
+                    parts = name_without_ext.split('.', 1)
+                    if len(parts) == 2:
+                        track_number = parts[0]
+                        title = parts[1].strip()
+                        # 순서 번호를 음악 이름에 포함
+                        display_title = f"{track_number}. {title}"
+                    else:
+                        display_title = name_without_ext
+                        track_number = "00"
                 else:
-                    title = name_without_ext
+                    display_title = name_without_ext
+                    track_number = "00"
                 
                 # 해당하는 이미지 파일 찾기
                 image_file = None
-                for img_file in os.listdir(UPLOAD_FOLDER):
+                for img_file in os.listdir(album_folder):
                     if img_file.startswith(name_without_ext.split('.')[0]) and img_file.endswith(('.jpg', '.jpeg', '.png')):
                         image_file = img_file
                         break
                 
                 music_info = {
                     'id': filename,
-                    'title': title,
+                    'title': display_title,
+                    'track_number': track_number,
                     'filename': filename,
                     'image': image_file,
                     'file_path': f'/api/stream/{filename}'
                 }
                 music_list.append(music_info)
         
-        # 제목순으로 정렬
-        music_list.sort(key=lambda x: x['title'])
+        # 트랙 번호순으로 정렬
+        music_list.sort(key=lambda x: x['track_number'])
         
         return jsonify({
             'success': True,
@@ -73,7 +91,7 @@ def get_music_list():
 def stream_music(filename):
     """음악 파일 스트리밍"""
     try:
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        file_path = os.path.join(UPLOAD_FOLDER, 'album1', filename)
         if os.path.exists(file_path):
             return send_file(file_path)
         else:
@@ -85,7 +103,7 @@ def stream_music(filename):
 def get_image(filename):
     """이미지 파일 반환"""
     try:
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        file_path = os.path.join(UPLOAD_FOLDER, 'album1', filename)
         if os.path.exists(file_path):
             return send_file(file_path)
         else:

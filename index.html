@@ -11,7 +11,7 @@
     <div class="container">
         <!-- 헤더 -->
         <header class="header">
-            <h1><i class="fas fa-music"></i> My Music Player</h1>
+            <h1><i class="fas fa-music"></i> 지니두리 음악 앨범 - 첫번째. 젊은날 희망</h1>
         </header>
 
         <!-- 음악 목록 -->
@@ -57,6 +57,21 @@
 
         <!-- 오디오 엘리먼트 -->
         <audio id="audioPlayer" preload="metadata"></audio>
+        
+        <!-- 가수 이미지 팝업 모달 -->
+        <div id="singerModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>레이나</h3>
+                    <button id="closeSingerModal" class="close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="singerImage" src="/api/singer-image/레이나.jpg" alt="레이나" class="singer-profile-image">
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/player.js"></script>

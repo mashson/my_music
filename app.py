@@ -99,15 +99,15 @@ def stream_music(filename):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/image/<filename>')
-def get_image(filename):
-    """이미지 파일 반환"""
+@app.route('/api/singer-image/<filename>')
+def get_singer_image(filename):
+    """가수 이미지 파일 반환"""
     try:
-        file_path = os.path.join(UPLOAD_FOLDER, 'album1', filename)
+        file_path = os.path.join(UPLOAD_FOLDER, 'singer', filename)
         if os.path.exists(file_path):
             return send_file(file_path)
         else:
-            return jsonify({'error': '이미지를 찾을 수 없습니다.'}), 404
+            return jsonify({'error': '가수 이미지를 찾을 수 없습니다.'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

@@ -24,6 +24,10 @@ class AudioPlayer {
         this.trackTitleEl = document.getElementById('trackTitle');
         this.trackArtistEl = document.getElementById('trackArtist');
         this.albumArtEl = document.getElementById('albumArt');
+        
+        // 가수 모달 요소들
+        this.singerModal = document.getElementById('singerModal');
+        this.closeSingerModal = document.getElementById('closeSingerModal');
     }
 
     bindEvents() {
@@ -40,6 +44,14 @@ class AudioPlayer {
         this.audio.addEventListener('loadedmetadata', () => this.updateDuration());
         this.audio.addEventListener('ended', () => this.nextTrack());
         this.audio.addEventListener('error', (e) => this.onError(e));
+        
+        // 가수 모달 이벤트
+        this.closeSingerModal.addEventListener('click', () => this.hideSingerModal());
+        this.singerModal.addEventListener('click', (e) => {
+            if (e.target === this.singerModal) {
+                this.hideSingerModal();
+            }
+        });
     }
 
     initialize() {
@@ -85,7 +97,10 @@ class AudioPlayer {
                 </div>
                 <div class="track-info">
                     <div class="track-title">${this.escapeHtml(track.title)}</div>
-                    <div class="track-artist">My Music</div>
+                    <div class="track-artist">
+                        <img src="/api/singer-image/레이나.jpg" alt="레이나" class="singer-profile" onclick="event.stopPropagation(); audioPlayer.showSingerModal();" onerror="this.style.display='none';">
+                        레이나
+                    </div>
                 </div>
                 <div class="play-overlay">
                     <i class="fas fa-play"></i>
@@ -181,7 +196,10 @@ class AudioPlayer {
         if (!this.currentTrack) return;
         
         this.trackTitleEl.textContent = this.currentTrack.title;
-        this.trackArtistEl.textContent = 'My Music';
+        this.trackArtistEl.innerHTML = `
+            <img src="/api/singer-image/레이나.jpg" alt="레이나" class="singer-profile" onclick="audioPlayer.showSingerModal();" onerror="this.style.display='none';">
+            레이나
+        `;
         
         // 앨범 아트 업데이트
         if (this.currentTrack.image) {
@@ -221,6 +239,14 @@ class AudioPlayer {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    showSingerModal() {
+        this.singerModal.classList.add('show');
+    }
+
+    hideSingerModal() {
+        this.singerModal.classList.remove('show');
     }
 
     showError(message) {

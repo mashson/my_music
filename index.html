@@ -3,332 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나만의 음악 앨범 책장</title>
+    <title>My Music Player</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- 헤더 -->
-    <header class="header">
-        <div class="header-content">
-            <h1 class="logo">
-                <i class="fas fa-music"></i>
-                나만의 음악 앨범 책장
-            </h1>
-            <div class="header-controls">
-                <div class="search-container">
-                    <input type="text" id="searchInput" placeholder="음악 검색..." class="search-input">
-                    <i class="fas fa-search search-icon"></i>
-                </div>
-                <button id="uploadBtn" class="btn btn-primary">
-                    <i class="fas fa-plus"></i>
-                    음악 추가
-                </button>
-                <button id="addAlbumBtn" class="btn btn-primary">
-                    <i class="fas fa-folder-plus"></i>
-                    앨범 추가
-                </button>
-                <button id="viewToggleBtn" class="btn btn-secondary">
-                    <i class="fas fa-th"></i>
-                    앨범 뷰
-                </button>
-            </div>
-        </div>
-    </header>
+    <div class="container">
+        <!-- 헤더 -->
+        <header class="header">
+            <h1><i class="fas fa-music"></i> My Music Player</h1>
+        </header>
 
-    <!-- 메인 컨텐츠 -->
-    <main class="main-content">
-        <!-- 로딩 인디케이터 -->
-        <div id="loadingIndicator" class="loading-indicator">
-            <i class="fas fa-spinner fa-spin"></i>
-            <span>로딩 중...</span>
-        </div>
+        <!-- 음악 목록 -->
+        <main class="main-content">
+            <div class="music-grid" id="musicGrid">
+                <!-- 음악 목록이 여기에 동적으로 로드됩니다 -->
+            </div>
+        </main>
 
-        <!-- 앨범 그리드 뷰 -->
-        <div id="albumView" class="album-view">
-            <div class="view-header">
-                <h2>앨범</h2>
-                <span id="albumCount" class="count-badge">0개 앨범</span>
-            </div>
-            <div id="albumGrid" class="album-grid">
-                <!-- 앨범 카드들이 여기에 동적으로 추가됩니다 -->
-            </div>
-        </div>
-
-        <!-- 트랙 리스트 뷰 -->
-        <div id="trackView" class="track-view" style="display: none;">
-            <div class="view-header">
-                <button id="backToAlbumsBtn" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i>
-                    앨범으로 돌아가기
-                </button>
-                <h2 id="currentAlbumTitle">앨범 트랙</h2>
-            </div>
-            <div id="trackList" class="track-list">
-                <!-- 트랙들이 여기에 동적으로 추가됩니다 -->
-            </div>
-        </div>
-
-        <!-- 검색 결과 -->
-        <div id="searchResults" class="search-results" style="display: none;">
-            <div class="view-header">
-                <h2>검색 결과</h2>
-                <span id="searchCount" class="count-badge">0개 결과</span>
-            </div>
-            <div id="searchTrackList" class="track-list">
-                <!-- 검색된 트랙들이 여기에 동적으로 추가됩니다 -->
-            </div>
-        </div>
-
-        <!-- 빈 상태 메시지 -->
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <i class="fas fa-music"></i>
-            <h3>음악이 없습니다</h3>
-            <p>첫 번째 음악 파일을 업로드해보세요!</p>
-            <button id="emptyStateUploadBtn" class="btn btn-primary">
-                <i class="fas fa-plus"></i>
-                음악 추가하기
-            </button>
-        </div>
-    </main>
-
-    <!-- 오디오 플레이어 -->
-    <div class="audio-player" id="audioPlayer">
-        <div class="player-content">
-            <!-- 현재 재생 중인 트랙 정보 -->
-            <div class="current-track">
-                <div class="track-cover" id="playerCover">
+        <!-- 플레이어 바 -->
+        <div class="player-bar" id="playerBar">
+            <div class="player-info">
+                <div class="album-art" id="albumArt">
                     <i class="fas fa-music"></i>
                 </div>
                 <div class="track-info">
-                    <div class="track-title" id="playerTitle">재생할 음악을 선택하세요</div>
-                    <div class="track-artist" id="playerArtist">아티스트</div>
+                    <div class="track-title" id="trackTitle">음악을 선택하세요</div>
+                    <div class="track-artist" id="trackArtist">Artist</div>
                 </div>
             </div>
-
-            <!-- 플레이어 컨트롤 -->
+            
             <div class="player-controls">
-                <button id="prevBtn" class="control-btn" disabled>
+                <button class="control-btn" id="prevBtn">
                     <i class="fas fa-step-backward"></i>
                 </button>
-                <button id="playPauseBtn" class="control-btn play-btn" disabled>
+                <button class="control-btn play-btn" id="playBtn">
                     <i class="fas fa-play"></i>
                 </button>
-                <button id="nextBtn" class="control-btn" disabled>
+                <button class="control-btn" id="nextBtn">
                     <i class="fas fa-step-forward"></i>
                 </button>
-                <button id="shuffleBtn" class="control-btn">
-                    <i class="fas fa-random"></i>
-                </button>
-                <button id="repeatBtn" class="control-btn">
-                    <i class="fas fa-redo"></i>
-                </button>
             </div>
-
-            <!-- 진행 바 -->
-            <div class="progress-container">
-                <span class="time" id="currentTime">0:00</span>
+            
+            <div class="player-progress">
+                <div class="time-display" id="currentTime">0:00</div>
                 <div class="progress-bar">
-                    <div class="progress" id="progressBar"></div>
-                    <input type="range" id="progressSlider" class="progress-slider" min="0" max="100" value="0">
+                    <div class="progress" id="progress"></div>
+                    <input type="range" class="progress-slider" id="progressSlider" min="0" max="100" value="0">
                 </div>
-                <span class="time" id="totalTime">0:00</span>
-            </div>
-
-            <!-- 볼륨 컨트롤 -->
-            <div class="volume-container">
-                <button id="muteBtn" class="control-btn">
-                    <i class="fas fa-volume-up"></i>
-                </button>
-                <div class="volume-bar">
-                    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="70">
-                </div>
-            </div>
-
-            <!-- 큐 및 즐겨찾기 -->
-            <div class="player-actions">
-                <button id="queueBtn" class="control-btn">
-                    <i class="fas fa-list"></i>
-                </button>
-                <button id="favoriteBtn" class="control-btn">
-                    <i class="far fa-heart"></i>
-                </button>
+                <div class="time-display" id="duration">0:00</div>
             </div>
         </div>
 
         <!-- 오디오 엘리먼트 -->
-        <audio id="audioElement" preload="metadata"></audio>
+        <audio id="audioPlayer" preload="metadata"></audio>
     </div>
 
-    <!-- 업로드 모달 -->
-    <div id="uploadModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>음악 파일 업로드</h3>
-                <button id="closeUploadModal" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-content">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <h4>파일을 드래그하거나 클릭하여 업로드</h4>
-                        <p>MP3, WAV, FLAC 파일을 지원합니다</p>
-                        <input type="file" id="fileInput" accept=".mp3,.wav,.flac,.m4a" multiple style="display: none;">
-                        <button id="selectFilesBtn" class="btn btn-primary">파일 선택</button>
-                    </div>
-                </div>
-                <div id="uploadProgress" class="upload-progress" style="display: none;">
-                    <div class="progress-info">
-                        <span id="uploadStatus">업로드 중...</span>
-                        <span id="uploadPercentage">0%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div id="uploadProgressBar" class="progress-fill"></div>
-                    </div>
-                </div>
-                <div id="uploadResults" class="upload-results" style="display: none;">
-                    <!-- 업로드 결과가 여기에 표시됩니다 -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 트랙 편집 모달 -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>트랙 정보 편집</h3>
-                <button id="closeEditModal" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm">
-                    <div class="form-group">
-                        <label for="editTitle">제목</label>
-                        <input type="text" id="editTitle" name="title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editArtist">아티스트</label>
-                        <input type="text" id="editArtist" name="artist" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editAlbum">앨범</label>
-                        <input type="text" id="editAlbum" name="album" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editYear">년도</label>
-                        <input type="text" id="editYear" name="year">
-                    </div>
-                    <div class="form-group">
-                        <label for="editGenre">장르</label>
-                        <input type="text" id="editGenre" name="genre">
-                    </div>
-                    <div class="form-group">
-                        <label for="editTrackNumber">트랙 번호</label>
-                        <input type="text" id="editTrackNumber" name="track_number">
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" id="cancelEditBtn" class="btn btn-secondary">취소</button>
-                        <button type="submit" class="btn btn-primary">저장</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 큐 모달 -->
-    <div id="queueModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>재생 큐</h3>
-                <button id="closeQueueModal" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="queueList" class="queue-list">
-                    <!-- 큐에 있는 트랙들이 여기에 표시됩니다 -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 앨범 생성 모달 -->
-    <div id="addAlbumModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>새 앨범 추가</h3>
-                <button id="closeAddAlbumModal" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addAlbumForm">
-                    <div class="form-group">
-                        <label for="addAlbumName">앨범명</label>
-                        <input type="text" id="addAlbumName" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="addAlbumArtist">아티스트</label>
-                        <input type="text" id="addAlbumArtist" name="artist" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="addAlbumYear">연도</label>
-                        <input type="text" id="addAlbumYear" name="year">
-                    </div>
-                    <div class="form-group">
-                        <label for="addAlbumGenre">장르</label>
-                        <input type="text" id="addAlbumGenre" name="genre">
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" id="cancelAddAlbumBtn" class="btn btn-secondary">취소</button>
-                        <button type="submit" class="btn btn-primary">앨범 생성</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 앨범 편집 모달 -->
-    <div id="editAlbumModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>앨범 정보 편집</h3>
-                <button id="closeEditAlbumModal" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editAlbumForm">
-                    <div class="form-group">
-                        <label for="editAlbumName">앨범명</label>
-                        <input type="text" id="editAlbumName" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editAlbumArtist">아티스트</label>
-                        <input type="text" id="editAlbumArtist" name="artist" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editAlbumYear">연도</label>
-                        <input type="text" id="editAlbumYear" name="year">
-                    </div>
-                    <div class="form-group">
-                        <label for="editAlbumGenre">장르</label>
-                        <input type="text" id="editAlbumGenre" name="genre">
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" id="cancelEditAlbumBtn" class="btn btn-secondary">취소</button>
-                        <button type="submit" class="btn btn-primary">저장</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <script src="js/api.js?v=20241220"></script>
-    <script src="js/player.js?v=20241220"></script>
-    <script src="js/app.js?v=20241220"></script>
+    <script src="js/player.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>

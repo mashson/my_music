@@ -31,12 +31,6 @@ ENV/
 .env.local
 .env.production
 
-# Uploads directory
-uploads/
-*.mp3
-*.wav
-*.flac
-
 # IDE
 .vscode/
 .idea/

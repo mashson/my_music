@@ -1,16 +1,15 @@
-# Vercel 배포를 위한 설정 파일
 {
   "version": 2,
   "builds": [
     {
-      "src": "index.html",
-      "use": "@vercel/static"
+      "src": "app.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "app.py"
     }
   ]
 }

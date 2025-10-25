@@ -273,5 +273,6 @@ def internal_error(error):
     return jsonify({"success": False, "error": "서버 내부 오류가 발생했습니다."}), 500
 
 if __name__ == '__main__':
-    # 개발 환경에서만 실행
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # 배포 환경에서 포트 설정
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
